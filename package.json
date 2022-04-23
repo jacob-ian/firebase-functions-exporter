@@ -7,6 +7,9 @@
   "author": "Jacob Ian Matthews (jacob-ian)",
   "license": "MIT",
   "private": false,
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "dev": "ts-node src/index.ts",
     "build": "rm -rf dist && tsc --project tsconfig.build.json",
