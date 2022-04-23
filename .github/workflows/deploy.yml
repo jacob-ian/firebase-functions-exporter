@@ -1,0 +1,25 @@
+name: Deploy on Release
+on:
+  release:
+    types:
+      - created
+jobs:
+  deploy:
+    name: Deploy to NPM
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Branch
+        uses: actions/checkout@v3
+      - name: Setup Node 16 environment
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          registry-url: https://registry.npmjs.org
+      - name: Install Dependencies
+        run: yarn install --frozen-lockfile --non-interactive
+      - name: Build Package
+        run: yarn build
+      - name: Publish to NPM
+        run: yarn publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
