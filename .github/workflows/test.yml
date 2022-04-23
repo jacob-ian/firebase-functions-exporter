@@ -16,6 +16,8 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16
+      - name: Install Dependencies
+        run: yarn install --frozen-lockfile --non-interactive
       - name: Ensure Linting
         run: yarn lint
       - name: Audit Dependencies
