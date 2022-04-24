@@ -1,21 +1,21 @@
-/**
- * The config for the Firebase Function Exporter
- */
-interface ExporterConfig {
-  /**
-   * A glob pattern for the name of files with Firebase Functions.
-   */
-  fileNamePattern?: string;
-  /**
-   * An array of subdirectories to search for Firebase Functions.
-   * Use ['*'] to search for all.
-   */
-  directories?: string[];
+import { sync as globSync } from "glob";
+
+// tslint:disable-next-line ban-types
+type FirebaseFunction = Function;
+
+interface Module {
+  name: string;
+  module: any;
+}
+
+interface ExportedFirebaseFunction {
+  name: string;
+  fn: FirebaseFunction;
 }
 
 /**
- * Exports all JS/TS Firebase Functions in all subdirectories
- * matching the filename '{functionName}.function.{ts,js}'.
+ * Exports all JS Firebase Functions in all subdirectories
+ * matching the filename pattern '{functionName}.function.js'.
  * @example
  * // Given the following:
  * reactive
@@ -33,32 +33,54 @@ interface ExporterConfig {
  * ['onUserCreate', 'getUser', 'deleteUser', 'sendEmail']
  *
  */
-export function exportFunctions(): Record<string, Function>;
-/**
- * Exports all Firebase Functions according to the provided config
- * and defaults.
- * @param config the config
- * @default
- * {
- *    directories: ['*'],
- *    fileNamePattern: '*.functions.{ts,js}'
- * }
- * @example
- *  // In all subdirectories:
- *  exportFunctions({
- *    fileNamePattern: '*.func.{ts,js}',
- *    directories: ['*']
- *  });
- *
- *  // In selected subdirectories:
- *  exportFunctions({
- *    fileNamePattern: '*.function.{ts,js}',
- *    directories: ['reactive', 'callable']
- *  })
- */
-export function exportFunctions(
-  config: ExporterConfig
-): Record<string, Function>;
-export function exportFunctions(
-  config?: ExporterConfig
-): Record<string, Function> {}
+export function exportFunctions(): Record<string, FirebaseFunction> {
+  const filePaths = getMatchingFilepaths();
+  const imports = getModules(filePaths);
+  return getFirebaseFunctionsFromModules(imports);
+}
+
+function getMatchingFilepaths(): string[] {
+  return globSync(`${__dirname}/**/*.function.{js,ts}`);
+}
+
+function getModules(filePaths: string[]): Module[] {
+  return filePaths.map((path) => ({
+    name: getFunctionNameFromFile(path),
+    module: require(path),
+  }));
+}
+
+function getFunctionNameFromFile(filePath: string): string {
+  return filePath.split("/").pop()?.split(".function.js")[0] as string;
+}
+
+function getFirebaseFunctionsFromModules(
+  modules: Module[]
+): Record<string, FirebaseFunction> {
+  const functions = modules
+    .map((module) => getFirebaseFunctionsFromExports(module))
+    .flat();
+  const exports: Record<string, FirebaseFunction> = {};
+  functions.forEach((fn) => (exports[fn.name] = fn.fn));
+  return exports;
+}
+
+function getFirebaseFunctionsFromExports(
+  imported: Module
+): ExportedFirebaseFunction[] {
+  const exported = imported.module;
+  const exports = Object.keys(imported.module);
+  return exports
+    .filter((key) => isFirebaseFunction(exported[key]))
+    .map((key) => ({
+      name: key === "default" ? imported.name : key,
+      fn: exported[key],
+    }));
+}
+
+function isFirebaseFunction(exported: unknown): exported is FirebaseFunction {
+  return (
+    typeof exported === "function" &&
+    (exported.name === "cloudFunction" || exported.name === "")
+  );
+}
