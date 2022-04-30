@@ -5,7 +5,7 @@ A utility that quickly exports all TypeScript/JavaScript Firebase Functions from
 1. Install the package in your Firebase Functions directory (usually `/functions`):
    1. With Yarn: `yarn add firebase-functions-exporter`
    2. With NPM: `npm i --save firebase-functions-exporter`
-2. Write your Firebase Functions in their own files, following the pattern `[NAME].function.ts` or `[NAME].function.js` grouped in directories of your choosing. For example:
+2. Write your Firebase Functions in their own files, following the pattern `[NAME].function.ts` or `[NAME].function.js`, grouped in directories of your choosing. For example:
    1. TypeScript (with functions grouped by type):
       ```
       functions
@@ -61,10 +61,12 @@ A utility that quickly exports all TypeScript/JavaScript Firebase Functions from
 
         exports = exportFunctions()
         ``` 
+4. Deploy to Firebase Functions:
+   `firebase deploy --only functions`.
 
 ## Notes
-1. If using default exports, the function will take the name of the file, i.e. the name of a default exported function in the file `onUserCreate.function.ts` will be `onUserCreate`.
-2. Deploying to Firebase Functions will fail if two or more functions have the same name.
+- If using default exports, the function will take the name of the file, i.e. the name of a default exported function in the file `onUserCreate.function.ts` will be `onUserCreate`.
+- Deploying to Firebase Functions will fail if two or more functions have the same name.
 
 ## Licence
 MIT
