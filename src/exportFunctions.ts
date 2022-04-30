@@ -14,8 +14,8 @@ interface ExportedFirebaseFunction {
 }
 
 /**
- * Exports all JS Firebase Functions in all subdirectories
- * matching the filename pattern '{functionName}.function.js'.
+ * Exports all JS/TS Firebase Functions in all subdirectories
+ * matching the filename pattern '{functionName}.function.{js,ts}'.
  * @example
  * // Given the following:
  * reactive
@@ -40,7 +40,8 @@ export function exportFunctions(): Record<string, FirebaseFunction> {
 }
 
 function getMatchingFilepaths(): string[] {
-  return globSync(`${__dirname}/**/*.function.{js,ts}`);
+  const pattern = `${process.cwd()}/**/*.function.{js,ts}`;
+  return globSync(pattern);
 }
 
 function getModules(filePaths: string[]): Module[] {
@@ -51,23 +52,22 @@ function getModules(filePaths: string[]): Module[] {
 }
 
 function getFunctionNameFromFile(filePath: string): string {
-  return filePath.split("/").pop()?.split(".function.js")[0] as string;
+  return filePath.split("/").pop()?.split(".function")[0] as string;
 }
 
-function getFirebaseFunctionsFromModules(
-  modules: Module[]
-): Record<string, FirebaseFunction> {
-  const functions = modules
-    .map((module) => getFirebaseFunctionsFromExports(module))
-    .flat();
+function getFirebaseFunctionsFromModules(modules: Module[]): Record<string, FirebaseFunction> {
+  const functions = modules.map((module) => getFirebaseFunctionsFromExports(module)).flat();
   const exports: Record<string, FirebaseFunction> = {};
-  functions.forEach((fn) => (exports[fn.name] = fn.fn));
+  functions.forEach((fn) => {
+    if (exports[fn.name]) {
+      throw new Error(`Firebase Functions must have unique names. Please rename ${fn.name}.`);
+    }
+    exports[fn.name] = fn.fn;
+  });
   return exports;
 }
 
-function getFirebaseFunctionsFromExports(
-  imported: Module
-): ExportedFirebaseFunction[] {
+function getFirebaseFunctionsFromExports(imported: Module): ExportedFirebaseFunction[] {
   const exported = imported.module;
   const exports = Object.keys(imported.module);
   return exports
@@ -80,7 +80,6 @@ function getFirebaseFunctionsFromExports(
 
 function isFirebaseFunction(exported: unknown): exported is FirebaseFunction {
   return (
-    typeof exported === "function" &&
-    (exported.name === "cloudFunction" || exported.name === "")
+    typeof exported === "function" && (exported.name === "cloudFunction" || exported.name === "")
   );
 }

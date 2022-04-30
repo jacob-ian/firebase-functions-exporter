@@ -14,7 +14,7 @@
     "start": "node .",
     "dev": "ts-node src/index.ts",
     "build": "rm -rf dist && tsc --project tsconfig.build.json",
-    "lint": "tslint -c tslint.json 'src/**/*.ts'",
+    "lint": "tslint -c tslint.json '{src,test}/**/*.ts'",
     "test": "jest --passWithNoTests",
     "test:watch": "yarn test --watch"
   },
@@ -36,6 +36,9 @@
   "jest": {
     "transform": {
       "^.+\\.(ts|tsx)$": "ts-jest"
-    }
+    },
+    "modulePathIgnorePatterns": [
+      "test/generated"
+    ]
   }
 }
