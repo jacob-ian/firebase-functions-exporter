@@ -1,5 +1,5 @@
 import { exportFunctions } from "../src";
-import { writeFile, rm, mkdir, stat } from "fs/promises";
+import { writeFile, rm, mkdir } from "fs/promises";
 
 const EXPECTED_FUNCTIONS = ["app", "onUserCreate", "createUser"];
 
