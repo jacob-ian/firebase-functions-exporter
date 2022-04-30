@@ -7,6 +7,7 @@
   "author": "Jacob Ian Matthews (jacob-ian)",
   "license": "MIT",
   "private": false,
+  "types": "dist/index.d.ts",
   "files": [
     "dist"
   ],
