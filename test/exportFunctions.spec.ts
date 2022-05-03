@@ -18,7 +18,6 @@ describe("exportFunctions", () => {
 
   it("Should return an object with the keys matching the name of the functions", () => {
     const functions = exportFunctions();
-    console.log(functions);
     const sortedFunctions = Object.keys(functions).sort((a, b) => a.localeCompare(b));
     EXPECTED_FUNCTIONS.sort((a, b) => a.localeCompare(b));
     expect(sortedFunctions).toEqual(EXPECTED_FUNCTIONS);
