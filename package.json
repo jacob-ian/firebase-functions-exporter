@@ -1,6 +1,6 @@
 {
   "name": "firebase-functions-exporter",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Automagically export all firebase functions in a directory!",
   "main": "dist/index.js",
   "repository": "https://github.com/jacob-ian/firebase-functions-exporter",
@@ -16,7 +16,7 @@
     "dev": "ts-node src/index.ts",
     "build": "rm -rf dist && tsc --project tsconfig.build.json",
     "lint": "tslint -c tslint.json '{src,test}/**/*.ts'",
-    "test": "jest --passWithNoTests",
+    "test": "WITH_TS=true jest --passWithNoTests",
     "test:watch": "yarn test --watch"
   },
   "devDependencies": {
