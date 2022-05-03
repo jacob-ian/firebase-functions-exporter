@@ -16,7 +16,7 @@
     "dev": "ts-node src/index.ts",
     "build": "rm -rf dist && tsc --project tsconfig.build.json",
     "lint": "tslint -c tslint.json '{src,test}/**/*.ts'",
-    "test": "jest --passWithNoTests",
+    "test": "WITH_TS=true jest --passWithNoTests",
     "test:watch": "yarn test --watch"
   },
   "devDependencies": {

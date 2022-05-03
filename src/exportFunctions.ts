@@ -13,21 +13,24 @@ interface ExportedFirebaseFunction {
   fn: FirebaseFunction;
 }
 
+const findTsFiles = process.env.WITH_TS === "true";
+
 /**
  * Exports all JS/TS Firebase Functions in all subdirectories
- * matching the filename pattern '{functionName}.function.{js,ts}'.
+ * matching the filename pattern '{functionName}.function.js'.
  * @example
  * // Given the following:
- * reactive
- *   onUserCreate.function.ts
- *   notAFunction.ts
- * callable
- *   users
- *    getUser.function.ts
- *    deleteUser.function.ts
+ * src
+ *   reactive
+ *     onUserCreate.function.ts
+ *     notAFunction.ts
+ *   callable
+ *     users
+ *      getUser.function.ts
+ *      deleteUser.function.ts
  *   emails
- *    sendEmail.function.ts
- *    Emailer.ts
+ *      sendEmail.function.ts
+ *      Emailer.ts
  *
  * // These functions will be exported
  * ['onUserCreate', 'getUser', 'deleteUser', 'sendEmail']
@@ -40,7 +43,8 @@ export function exportFunctions(): Record<string, FirebaseFunction> {
 }
 
 function getMatchingFilepaths(): string[] {
-  const pattern = `${process.cwd()}/**/*.function.{js,ts}`;
+  const fileExtensions = "js" + (findTsFiles ? ",ts" : "");
+  const pattern = `${process.cwd()}/**/*.function.{${fileExtensions}}`;
   return globSync(pattern);
 }
 
