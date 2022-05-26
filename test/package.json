@@ -1,0 +1,28 @@
+{
+  "name": "firebase-functions-exporter-test",
+  "version": "0.0.0",
+  "author": "Jacob Ian Matthews (jacob-ian)",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "firebase-admin": "^10.1.0",
+    "firebase-functions": "^3.20.1",
+    "firebase-functions-exporter": "link:./../.."
+  },
+  "scripts": {
+    "build": "rm -rf dist && tsc",
+    "test": "yarn build && jest",
+    "test:ci": "yarn link firebase-functions-exporter && yarn install && yarn test"
+  },
+  "devDependencies": {
+    "@types/jest": "^27.5.1",
+    "@types/node": "^17.0.35",
+    "jest": "^28.1.0",
+    "typescript": "^4.6.4"
+  },
+  "jest": {
+    "testMatch": [
+      "**/*.spec.js"
+    ]
+  }
+}

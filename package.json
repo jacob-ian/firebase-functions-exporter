@@ -1,12 +1,12 @@
 {
   "name": "firebase-functions-exporter",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Automagically export all firebase functions in a directory!",
-  "main": "dist/index.js",
   "repository": "https://github.com/jacob-ian/firebase-functions-exporter",
   "author": "Jacob Ian Matthews (jacob-ian)",
   "license": "MIT",
   "private": false,
+  "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
     "dist"
@@ -16,8 +16,8 @@
     "dev": "ts-node src/index.ts",
     "build": "rm -rf dist && tsc --project tsconfig.build.json",
     "lint": "tslint -c tslint.json '{src,test}/**/*.ts'",
-    "test": "WITH_TS=true jest --passWithNoTests",
-    "test:watch": "yarn test --watch"
+    "test": "yarn build && cd test && yarn test",
+    "test:ci": "yarn link && yarn build && cd test && yarn test:ci"
   },
   "devDependencies": {
     "@types/glob": "^7.2.0",
@@ -25,21 +25,11 @@
     "@types/node": "^17.0.25",
     "firebase-admin": "^10.1.0",
     "firebase-functions": "^3.20.1",
-    "jest": "^27.5.1",
-    "ts-jest": "^27.1.4",
     "ts-node": "^10.7.0",
     "tslint": "^6.1.3",
     "typescript": "^4.6.3"
   },
   "dependencies": {
     "glob": "^8.0.1"
-  },
-  "jest": {
-    "transform": {
-      "^.+\\.(ts|tsx)$": "ts-jest"
-    },
-    "modulePathIgnorePatterns": [
-      "test/generated"
-    ]
   }
 }
