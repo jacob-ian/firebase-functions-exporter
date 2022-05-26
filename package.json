@@ -1,6 +1,6 @@
 {
   "name": "firebase-functions-exporter",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Automagically export all firebase functions in a directory!",
   "repository": "https://github.com/jacob-ian/firebase-functions-exporter",
   "author": "Jacob Ian Matthews (jacob-ian)",
