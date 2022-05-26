@@ -1,18 +1,22 @@
-import { exportFunctions } from "../src";
+import { exportFunctions } from "firebase-functions-exporter";
 import { writeFile, rm, mkdir } from "fs/promises";
 
 const EXPECTED_FUNCTIONS = ["app", "onUserCreate", "createUser"];
 
 const ON_USER_CREATE_FN = `
-import * as functions from "firebase-functions";
+const functions = require("firebase-functions");
 
-export const onUserCreate = functions.auth.user().onCreate(() => {});
+exports.onUserCreate = functions.auth.user().onCreate(() => {});
 `;
 
 describe("exportFunctions", () => {
   const generatedDir = `${__dirname}/generated`;
 
   beforeEach(async () => {
+    await rm(generatedDir, { recursive: true, force: true });
+  });
+
+  afterAll(async () => {
     await rm(generatedDir, { recursive: true, force: true });
   });
 
@@ -25,11 +29,10 @@ describe("exportFunctions", () => {
 
   it("Should throw an error if a function with the same name appears twice", async () => {
     await mkdir(generatedDir);
-    const testFilePath = `${generatedDir}/onUserCreate.function.ts`;
+    const testFilePath = `${generatedDir}/onUserCreate.function.js`;
     await writeFile(testFilePath, Buffer.from(ON_USER_CREATE_FN), "utf-8");
     expect(() => exportFunctions()).toThrow(
       new Error("Firebase Functions must have unique names. Please rename onUserCreate.")
     );
-    await rm(generatedDir, { recursive: true, force: true });
   });
 });

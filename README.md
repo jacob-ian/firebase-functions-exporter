@@ -53,13 +53,13 @@ A utility that quickly exports all TypeScript/JavaScript Firebase Functions from
       ```ts
       import { exportFunctions } from 'firebase-functions-exporter';
 
-      exports = exportFunctions();
+      module.exports = exportFunctions();
       ```
     1. JavaScript: `functions/index.js`:
         ```js
         const { exportFunctions } = require('firebase-functions-exporter');
 
-        exports = exportFunctions()
+        module.exports = exportFunctions()
         ``` 
 4. Deploy to Firebase Functions:
    `firebase deploy --only functions`.

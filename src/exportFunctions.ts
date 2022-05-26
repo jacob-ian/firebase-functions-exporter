@@ -13,8 +13,6 @@ interface ExportedFirebaseFunction {
   fn: FirebaseFunction;
 }
 
-const findTsFiles = process.env.WITH_TS === "true";
-
 /**
  * Exports all JS/TS Firebase Functions in all subdirectories
  * matching the filename pattern '{functionName}.function.js'.
@@ -43,8 +41,7 @@ export function exportFunctions(): Record<string, FirebaseFunction> {
 }
 
 function getMatchingFilepaths(): string[] {
-  const fileExtensions = "js" + (findTsFiles ? ",ts" : "");
-  const pattern = `${process.cwd()}/**/*.function.{${fileExtensions}}`;
+  const pattern = `${process.cwd()}/**/*.function.js`;
   return globSync(pattern);
 }
 
