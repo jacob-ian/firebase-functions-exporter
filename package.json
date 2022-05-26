@@ -16,7 +16,8 @@
     "dev": "ts-node src/index.ts",
     "build": "rm -rf dist && tsc --project tsconfig.build.json",
     "lint": "tslint -c tslint.json '{src,test}/**/*.ts'",
-    "test": "yarn build && cd test && yarn test"
+    "test": "yarn build && cd test && yarn test",
+    "test:ci": "yarn build && cd test && yarn test:ci"
   },
   "devDependencies": {
     "@types/glob": "^7.2.0",

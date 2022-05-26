@@ -11,7 +11,8 @@
   },
   "scripts": {
     "build": "rm -rf dist && tsc",
-    "test": "yarn install && yarn build && jest"
+    "test": "yarn build && jest",
+    "test:ci": "yarn install && yarn test"
   },
   "devDependencies": {
     "@types/jest": "^27.5.1",

@@ -22,5 +22,5 @@ jobs:
         run: yarn lint
       - name: Audit Dependencies
         run: yarn audit --groups dependencies
-      - name: Run Jest tests
-        run: yarn test
+      - name: Run Tests
+        run: yarn test:ci
