@@ -10,5 +10,7 @@
     "outDir": "dist",
     "declaration": true,
     "strictNullChecks": true
-  }
+  },
+  "exclude": ["test"],
+  "include": ["src"]
 }
